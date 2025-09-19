@@ -144,3 +144,54 @@ void turnOff(String deviceId) {
   }     
 }
 
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+  switch(type) {
+    case WStype_DISCONNECTED:
+      isConnected = false;    
+      Serial.printf("[WSc] Webservice disconnected from sinric.com!\n");
+      break;
+    case WStype_CONNECTED: {
+      isConnected = true;
+      Serial.printf("[WSc] Service connected to sinric.com at url: %s\n", payload);
+      Serial.printf("Waiting for commands from sinric.com ...\n");        
+      }
+      break;
+    case WStype_TEXT: {
+        Serial.printf("[WSc] get text: %s\n", payload);
+        // Example payloads
+
+        // For Switch or Light device types
+        // {"deviceId": xxxx, "action": "setPowerState", value: "ON"} // https://developer.amazon.com/docs/device-apis/alexa-powercontroller.html
+
+        // For Light device type
+        // Look at the light example in github
+          
+        DynamicJsonBuffer jsonBuffer;
+        JsonObject& json = jsonBuffer.parseObject((char*)payload); 
+        String deviceId = json ["deviceId"];     
+        String action = json ["action"];
+        
+        if(action == "setPowerState") { // Switch or Light
+            String value = json ["value"];
+            if(value == "ON") {
+                turnOn(deviceId);
+            } else {
+                turnOff(deviceId);
+            }
+        }
+        else if (action == "SetTargetTemperature") {
+            String deviceId = json ["deviceId"];     
+            String action = json ["action"];
+            String value = json ["value"];
+        }
+        else if (action == "test") {
+            Serial.println("[WSc] received test command from sinric.com");
+        }
+      }
+      break;
+    case WStype_BIN:
+      Serial.printf("[WSc] get binary length: %u\n", length);
+      break;
+  }
+}
+
