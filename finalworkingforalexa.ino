@@ -195,3 +195,50 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
   }
 }
 
+void setup() {
+  Serial.begin(115200);
+  pinMode(device_1, OUTPUT);
+  pinMode(device_2, OUTPUT);
+  pinMode(device_3, OUTPUT);
+  pinMode(device_4, OUTPUT);
+  pinMode(device_5, OUTPUT);
+  pinMode(device_6, OUTPUT);
+  pinMode(device_7, OUTPUT);
+  pinMode(device_8, OUTPUT);
+  digitalWrite(device_1, HIGH);
+  digitalWrite(device_2, HIGH);
+  digitalWrite(device_3, HIGH);
+  digitalWrite(device_4, HIGH);
+  digitalWrite(device_5, HIGH);
+  digitalWrite(device_6, HIGH);
+  digitalWrite(device_7, HIGH);
+  digitalWrite(device_8, HIGH);
+  
+  WiFiMulti.addAP(MySSID, MyWifiPassword);
+  Serial.println();
+  Serial.print("Connecting to Wifi: ");
+  Serial.println(MySSID);  
+
+  // Waiting for Wifi connect
+  while(WiFiMulti.run() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  if(WiFiMulti.run() == WL_CONNECTED) {
+    Serial.println("");
+    Serial.print("WiFi connected. ");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
+
+  // server address, port and URL
+  webSocket.begin("iot.sinric.com", 80, "/");
+
+  // event handler
+  webSocket.onEvent(webSocketEvent);
+  webSocket.setAuthorization("apikey", MyApiKey);
+  
+  // try again every 5000ms if connection has failed
+  webSocket.setReconnectInterval(5000);   // If you see 'class WebSocketsClient' has no member named 'setReconnectInterval' error update arduinoWebSockets
+}
+
