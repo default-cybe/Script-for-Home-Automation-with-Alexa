@@ -15,3 +15,35 @@ I put this together to control ordinary, non-smart appliances around the house w
 - Reconnects on its own when the WiFi or the Sinric link drops
 - Sends a heartbeat every few minutes so the cloud connection survives overnight, even when the ISP shuffles IPs around
 
+# Hardware
+
+What you'll need:
+
+- A NodeMCU / ESP8266 board
+- A relay module (up to 8 channels) to do the actual switching
+- Whatever lights or appliances you want to control
+
+Each device gets its own GPIO pin. Here's how the sketch wires them up:
+
+| Device | GPIO |
+| ------ | ---- |
+| 1 | GPIO5 (D1) |
+| 2 | GPIO4 (D2) |
+| 3 | GPIO0 (D3) |
+| 4 | GPIO2 (D4) |
+| 5 | GPIO14 (D5) |
+| 6 | GPIO12 (D6) |
+| 7 | GPIO13 (D7) |
+| 8 | GPIO15 (D8) |
+
+One thing to keep in mind: the relays are active-LOW. Every pin starts out driven `HIGH` (off) at boot, and switching a device on pulls its pin `LOW`.
+
+# Required Libraries
+
+Grab these from the Arduino Library Manager, or build them from source:
+
+- ESP8266 core for Arduino (this is what gives you `ESP8266WiFi` and `ESP8266WiFiMulti`)
+- [WebSocketsClient (arduinoWebSockets)](https://github.com/Links2004/arduinoWebSockets)
+- [ArduinoJson](https://github.com/bblanchon/ArduinoJson), the 5.x line, since that's what the Sinric examples were written against
+- StreamString
+
