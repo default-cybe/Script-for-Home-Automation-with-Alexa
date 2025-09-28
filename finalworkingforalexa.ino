@@ -242,3 +242,16 @@ void setup() {
   webSocket.setReconnectInterval(5000);   // If you see 'class WebSocketsClient' has no member named 'setReconnectInterval' error update arduinoWebSockets
 }
 
+void loop() {
+  webSocket.loop();
+  
+  if(isConnected) {
+      uint64_t now = millis();
+      
+      // Send heartbeat in order to avoid disconnections during ISP resetting IPs over night.
+      if((now - heartbeatTimestamp) > HEARTBEAT_INTERVAL) {
+          heartbeatTimestamp = now;
+          webSocket.sendTXT("H");          
+      }
+  }   
+}
