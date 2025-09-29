@@ -47,3 +47,26 @@ Grab these from the Arduino Library Manager, or build them from source:
 - [ArduinoJson](https://github.com/bblanchon/ArduinoJson), the 5.x line, since that's what the Sinric examples were written against
 - StreamString
 
+# Setup
+
+1. Make an account at [sinric.com](https://sinric.com) and add your devices there. Copy the API key from the dashboard, plus each device's ID.
+2. Open `finalworkingforalexa.ino` in the Arduino IDE.
+3. Drop your credentials in near the top of the sketch:
+
+   ```cpp
+   #define MyApiKey       "YOUR_API_KEY"        // Sinric API key from the dashboard
+   #define MySSID         "YOUR_WIFI_SSID"      // your WiFi network name
+   #define MyWifiPassword "YOUR_WIFI_PASSWORD"  // your WiFi password
+   ```
+
+4. Swap the placeholder device IDs in the `turnOn()` and `turnOff()` functions for the ones on your Sinric dashboard.
+5. Pick your NodeMCU board and port, then upload.
+6. Link the Sinric skill in the Alexa app and ask Alexa to discover devices.
+
+# Tech Used
+
+![Arduino](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white)
+
+# License
+
+MIT. See [LICENSE](LICENSE).
